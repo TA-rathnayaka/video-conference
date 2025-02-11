@@ -19,6 +19,23 @@ export const useWebRTC = (roomId) => {
     });
     setPc(rtcPeerConnection);
 
+    const getLocalStream = async () => {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: true,
+          audio: true,
+        });
+        setLocalStream(stream);
+        stream.getTracks().forEach((track) => {
+          rtcPeerConnection.addTrack(track, stream);
+        });
+      } catch (error) {
+        console.error("Error accessing local media:", error);
+      }
+    };
+
+    getLocalStream();
+
     // Create a MediaStream for remote tracks and store it in state
     const remoteMediaStream = new MediaStream();
     setRemoteStream(remoteMediaStream);
@@ -48,23 +65,6 @@ export const useWebRTC = (roomId) => {
         }
       }
     };
-
-    // Capture the local media stream (video and audio) and add its tracks to the RTCPeerConnection.
-    const getLocalStream = async () => {
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({
-          video: true,
-          audio: true,
-        });
-        setLocalStream(stream);
-        stream.getTracks().forEach((track) => {
-          rtcPeerConnection.addTrack(track, stream);
-        });
-      } catch (error) {
-        console.error("Error accessing local media:", error);
-      }
-    };
-    getLocalStream();
 
     // Listen for signals from Firestore and handle them accordingly.
     const unsubscribe = onSnapshot(signalsRef, async (snapshot) => {
