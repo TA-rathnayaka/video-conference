@@ -5,7 +5,7 @@ import struct
 import threading
 
 # Server IP and Port
-SERVER_IP = '127.0.0.1'  # Change this to the actual server IP
+SERVER_IP = '192.168.56.1'  # Change this to the actual server IP
 PORT = 9999
 
 # Create socket
@@ -13,7 +13,7 @@ client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client_socket.connect((SERVER_IP, PORT))
 
 # Start video capture
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(1)
 
 def receive_video():
     """ Receive video frames from the server and display them """

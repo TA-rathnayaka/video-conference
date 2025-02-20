@@ -87,6 +87,6 @@ def get_local_ip() -> str:
 
 
 if __name__ == "__main__":
-    client = StreamingClient(get_local_ip(), 8485)
+    client = StreamingClient("192.168.55.218", 8585)
     client.connect()
     client.start_stream()

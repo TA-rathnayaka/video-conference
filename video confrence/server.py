@@ -2,9 +2,39 @@ import socket
 import threading
 import pickle
 import struct
+import netifaces
+import logging
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
+
+def get_local_ip() -> str:
+    """Get the local IP address of the machine."""
+    try:
+        interfaces = netifaces.interfaces()
+        
+        for interface in interfaces:
+            if netifaces.AF_INET in netifaces.ifaddresses(interface):
+                ip_info = netifaces.ifaddresses(interface)[netifaces.AF_INET]
+                
+                for addr in ip_info:
+                    ip_address = addr['addr']
+                    if ip_address != '127.0.0.1':
+                        logger.info(f"Found local IP: {ip_address}")
+                        return ip_address
+        
+        logger.warning("No non-loopback IP found, using localhost")
+        return '127.0.0.1'
+    except Exception as e:
+        logger.error(f"Error getting local IP: {str(e)}")
+        return '127.0.0.1'
 
 # Server configuration
-HOST = '0.0.0.0'
+HOST = get_local_ip()
 PORT = 9999
 
 # Create socket

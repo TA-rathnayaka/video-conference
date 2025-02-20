@@ -82,5 +82,5 @@ def get_local_ip() -> str:
 
 
 if __name__ == "__main__":
-    server = StreamingServer(get_local_ip(), 8485)
+    server = StreamingServer("0.0.0.0", 8585)
     server.start()
